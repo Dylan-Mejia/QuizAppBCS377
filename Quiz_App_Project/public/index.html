@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Quiz App Home</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Welcome to the Randomland Quiz App</h1>
+
+  <nav>
+    <ul>
+      <li id="navHome"><a href="index.html">Home</a></li>
+      <li id="navSignup"><a href="signup.html">Signup</a></li>
+      <li id="navLogin"><a href="login.html">Login</a></li>
+      <li id="navProfile" style="display:none;"><a href="profile.html">Profile</a></li>
+      <li id="navLeaderboard"><a href="leaderboard.html">Leaderboard</a></li>
+      <li id="navLogout" style="display:none;"><a href="#" id="logoutLink">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div id="notAuthed" style="display:none;">
+    <section>
+      <h2>Welcome!</h2>
+      <p>Test your knowledge with a fun trivia quiz on random subjects! Please log in or sign up to get started.</p>
+      <button id="goLogin">Login</button>
+      <button id="goSignup">Sign Up</button>
+    </section>
+  </div>
+
+  <div id="authed" style="display:none;">
+    <section>
+      <div id="userGreeting"></div>
+      <p>Test your knowledge with a fun trivia quiz on random subjects!</p>
+      <button id="startQuiz">Start Quiz</button>
+      <button id="viewProfile">View Profile & History</button>
+    </section>
+  </div>
+
+  <script>
+    async function checkAuth() {
+      const res = await fetch('/api/auth/me', { credentials: 'same-origin' });
+      if (res.ok) {
+        const me = await res.json();
+        document.getElementById('notAuthed').style.display = 'none';
+        document.getElementById('authed').style.display = 'block';
+        document.getElementById('userGreeting').textContent = `Welcome back, ${me.displayName}!`;
+        document.getElementById('navSignup').style.display = 'none';
+        document.getElementById('navLogin').style.display = 'none';
+        document.getElementById('navProfile').style.display = 'list-item';
+        document.getElementById('navLogout').style.display = 'list-item';
+      } else {
+        document.getElementById('notAuthed').style.display = 'block';
+        document.getElementById('authed').style.display = 'none';
+        document.getElementById('navSignup').style.display = 'list-item';
+        document.getElementById('navLogin').style.display = 'list-item';
+        document.getElementById('navProfile').style.display = 'none';
+        document.getElementById('navLogout').style.display = 'none';
+      }
+    }
+
+    document.getElementById('goLogin').onclick = () => {
+      window.location.href = '/login.html';
+    };
+
+    document.getElementById('goSignup').onclick = () => {
+      window.location.href = '/signup.html';
+    };
+
+    document.getElementById('startQuiz').onclick = () => {
+      window.location.href = '/quiz.html';
+    };
+
+    document.getElementById('viewProfile').onclick = () => {
+      window.location.href = '/profile.html';
+    };
+
+    document.getElementById('logoutLink').onclick = (e) => {
+      e.preventDefault();
+      fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'same-origin'
+      }).then(() => {
+        window.location.href = '/index.html';
+      });
+    };
+
+    checkAuth();
+  </script>
+</body>
+</html>

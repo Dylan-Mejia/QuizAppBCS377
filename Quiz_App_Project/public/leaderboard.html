@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Leaderboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/signup.html">Signup</a></li>
+      <li><a href="/login.html">Login</a></li>
+      <li><a href="/profile.html">Profile</a></li>
+      <li><a href="/leaderboard.html">Leaderboard</a></li>
+    </ul>
+  </nav>
+
+  <h1>Leaderboard</h1>
+  <table border="1">
+    <thead>
+      <tr><th>Rank</th><th>Name</th><th>Score</th><th>Questions</th><th>Date</th></tr>
+    </thead>
+    <tbody id="board"></tbody>
+  </table>
+  <p><button onclick="window.location.href='/index.html'">Return to Homepage</button></p>
+  <script>
+    async function loadBoard() {
+      const res = await fetch('/api/leaderboard');
+      const board = await res.json();
+      const tbody = document.getElementById('board');
+      if (Array.isArray(board)) {
+        tbody.innerHTML = board.map((row, i) =>
+          `<tr>
+            <td>${i+1}</td>
+            <td>${row.displayName}</td>
+            <td>${row.score}</td>
+            <td>${row.numQuestions}</td>
+            <td>${new Date(row.finishedAt).toLocaleString()}</td>
+          </tr>`
+        ).join('');
+      }
+    }
+    loadBoard();
+  </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Quiz</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/signup.html">Signup</a></li>
+      <li><a href="/login.html">Login</a></li>
+      <li><a href="/profile.html">Profile</a></li>
+      <li><a href="/leaderboard.html">Leaderboard</a></li>
+    </ul>
+  </nav>
+
+  <h1>Quiz</h1>
+  <div id="user"></div>
+  <div id="container">
+    <div id="intro">
+      <p>Ready to start a quick quiz?</p>
+      <label>Number of questions: <input id="numQ" type="number" min="1" max="50" value="10"></label>
+      <button id="startBtn">Start Quiz</button>
+    </div>
+
+    <div id="quiz" style="display:none;">
+      <div id="qwrap">
+        <h3 id="qText"></h3>
+        <div id="options"></div>
+      </div>
+      <div id="progress"></div>
+    </div>
+
+    <div id="result" style="display:none;"></div>
+  </div>
+
+  <script>
+    let sessionId = null;
+    let questions = [];
+    let current = 0;
+
+    async function loadUser() {
+      const res = await fetch('/api/auth/me', { credentials: 'same-origin' });
+      const el = document.getElementById('user');
+      if (!res.ok) {
+        el.innerHTML = 'Not logged in. Redirecting to login...';
+        setTimeout(() => window.location.href = '/login.html', 1000);
+        return false;
+      }
+      const me = await res.json();
+      el.textContent = `Logged in as ${me.displayName} (${me.email})`;
+      return true;
+    }
+
+    function renderQuestion() {
+      const q = questions[current];
+      document.getElementById('qText').textContent = `${current+1}. ${q.question}`;
+      const opts = document.getElementById('options');
+      opts.innerHTML = '';
+      q.options.forEach(opt => {
+        const b = document.createElement('button');
+        b.textContent = `${opt.key}. ${opt.text}`;
+        b.onclick = () => answerQuestion(q.id, opt.key);
+        opts.appendChild(b);
+      });
+      document.getElementById('progress').textContent = `Question ${current+1} of ${questions.length}`;
+    }
+
+    async function answerQuestion(questionId, selectedAnswer) {
+      try {
+        const res = await fetch('/api/game/answer', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ gameSessionId: sessionId, questionId, selectedAnswer })
+        });
+        const data = await res.json();
+        // show feedback briefly
+        const opts = document.getElementById('options');
+        const msg = document.createElement('div');
+        msg.className = data.isCorrect ? 'feedback correct' : 'feedback incorrect';
+        msg.textContent = data.isCorrect ? 'Correct!' : 'Incorrect';
+        opts.appendChild(msg);
+        // move to next
+        current++;
+        if (current < questions.length) {
+          setTimeout(renderQuestion, 700);
+        } else {
+          setTimeout(finishQuiz, 700);
+        }
+      } catch (err) {
+        alert('Error answering question: ' + err.message);
+      }
+    }
+
+    async function finishQuiz() {
+      const res = await fetch('/api/game/finish', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ gameSessionId: sessionId })
+      });
+      const data = await res.json();
+      document.getElementById('quiz').style.display = 'none';
+      const r = document.getElementById('result');
+      r.style.display = 'block';
+      r.innerHTML = `
+        <h2>Your Score: ${data.score} / ${data.numQuestions}</h2>
+        <p><button id="profileBtn">View Profile & History</button></p>
+        <p><button id="homeReturn">Return to Homepage</button></p>
+      `;
+      const profileBtn = document.getElementById('profileBtn');
+      const homeBtn = document.getElementById('homeReturn');
+      if (profileBtn) profileBtn.onclick = () => window.location.href = '/profile.html';
+      if (homeBtn) homeBtn.onclick = () => window.location.href = '/index.html';
+    }
+
+    document.getElementById('startBtn').onclick = async () => {
+      const ok = await loadUser();
+      if (!ok) return;
+      const numQ = parseInt(document.getElementById('numQ').value || '10', 10);
+      const res = await fetch('/api/game/start', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ numQuestions: numQ, source: 'local' })
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        alert('Could not start quiz: ' + (err.error || res.statusText));
+        return;
+      }
+      const body = await res.json();
+      sessionId = body.gameSessionId;
+      questions = body.questions;
+      current = 0;
+      document.getElementById('intro').style.display = 'none';
+      document.getElementById('quiz').style.display = 'block';
+      renderQuestion();
+    };
+
+    // Attempt to show auth status on load
+    loadUser();
+  </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/signup.html">Signup</a></li>
+      <li><a href="/login.html">Login</a></li>
+      <li><a href="/profile.html">Profile</a></li>
+      <li><a href="/leaderboard.html">Leaderboard</a></li>
+    </ul>
+  </nav>
+
+  <h1>Login</h1>
+  <form id="loginForm">
+    <label>Email: <input type="email" name="email" required></label><br/>
+    <label>Password: <input type="password" name="password" required></label><br/>
+    <button type="submit">Login</button>
+  </form>
+  <p id="msg"></p>
+  <p>Don't have an account? <button id="goSignup" style="background: none; border: none; color: #9ad0ff; text-decoration: underline; cursor: pointer; padding: 0; font-weight: bold;">Sign up here</button></p>
+  <script>
+    document.getElementById('loginForm').onsubmit = async e => {
+      e.preventDefault();
+      const form = e.target;
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          email: form.email.value,
+          password: form.password.value
+        })
+      });
+      const data = await res.json();
+      document.getElementById('msg').textContent = res.ok ? 'Login successful! Redirecting...' : data.error;
+      if (res.ok) setTimeout(() => window.location.href = '/index.html', 600);
+    };
+
+    document.getElementById('goSignup').onclick = (e) => {
+      e.preventDefault();
+      window.location.href = '/signup.html';
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Profile</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/signup.html">Signup</a></li>
+      <li><a href="/login.html">Login</a></li>
+      <li><a href="/profile.html">Profile</a></li>
+      <li><a href="/leaderboard.html">Leaderboard</a></li>
+    </ul>
+  </nav>
+
+  <h1>Your Profile</h1>
+  <div id="info"></div>
+  <h2>Play History</h2>
+  <ul id="history"></ul>
+  <p><button id="historyBtn">View Profile & History</button></p>
+  <p><button id="homeBtn">Return to Homepage</button></p>
+  <script>
+    async function loadProfile() {
+      const meRes = await fetch('/api/auth/me', { credentials: 'same-origin' });
+      if (!meRes.ok) {
+        document.getElementById('info').textContent = 'Not logged in. Redirecting...';
+        setTimeout(() => window.location.href = '/login.html', 1000);
+        return;
+      }
+      const me = await meRes.json();
+      document.getElementById('info').textContent = `Logged in as ${me.displayName} (${me.email})`;
+
+      const histRes = await fetch('/api/user/history', { credentials: 'same-origin' });
+      const history = await histRes.json();
+      const ul = document.getElementById('history');
+      ul.innerHTML = history.map(h =>
+        `<li>Score: ${h.score}/${h.numQuestions} on ${new Date(h.finishedAt).toLocaleString()}</li>`
+      ).join('');
+    }
+    loadProfile();
+    document.getElementById('historyBtn').onclick = () => { loadProfile(); };
+    document.getElementById('homeBtn').onclick = () => { window.location.href = '/index.html'; };
+  </script>
+</body>
+</html>

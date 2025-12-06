@@ -1,0 +1,279 @@
+/* General reset */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #1e1e1e;
+  color: #fff;
+}
+
+/* Headings */
+h1, h2, h3 {
+  color: #fff;
+}
+
+/* Navigation */
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+  display: flex;
+  gap: 15px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #9ad0ff;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* Forms */
+form {
+  margin: 15px 0;
+  background: #2b2b2b;
+  padding: 20px;
+  border-radius: 6px;
+  border: 1px solid #444;
+}
+
+label {
+  display: block;
+  margin: 8px 0;
+  color: #fff;
+  font-weight: 500;
+}
+
+input, button {
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background: #2b2b2b;
+  color: #fff;
+}
+
+input::placeholder {
+  color: #999;
+}
+
+button {
+  background: #3498db;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #2980b9;
+}
+
+button:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 15px;
+  background: #2b2b2b;
+}
+
+th, td {
+  border: 1px solid #444;
+  padding: 12px;
+  text-align: center;
+  color: #fff;
+}
+
+th {
+  background: #3a3a3a;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background: #2b2b2b;
+}
+
+/* Quiz layout */
+#questionBox {
+  margin: 20px 0;
+  padding: 15px;
+  background: #2b2b2b;
+  border: 1px solid #444;
+  border-radius: 6px;
+}
+
+#controls {
+  margin-top: 15px;
+}
+
+#timer {
+  font-weight: bold;
+  color: #e74c3c;
+}
+
+/* Quiz specific styles */
+#intro {
+  background: #2b2b2b;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  max-width: 500px;
+}
+
+#intro input {
+  max-width: 200px;
+  margin-bottom: 15px;
+}
+
+#qwrap {
+  background: #2b2b2b;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #444;
+}
+
+#qText {
+  color: #fff;
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+#options {
+  display: grid;
+  gap: 10px;
+}
+
+#options button {
+  width: 100%;
+  text-align: left;
+  padding: 12px;
+  background: #3498db;
+  border: 1px solid #2980b9;
+  color: #fff;
+  font-weight: bold;
+}
+
+#options button:hover {
+  background: #2980b9;
+}
+
+/* Result feedback colors */
+.feedback {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.correct {
+  background: #27ae60;
+  color: #fff;
+}
+
+.incorrect {
+  background: #e74c3c;
+  color: #fff;
+}
+
+/* Profile and history */
+#info {
+  background: #2b2b2b;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+#history {
+  background: #2b2b2b;
+  padding: 15px;
+  border-radius: 8px;
+  list-style: none;
+  border: 1px solid #444;
+}
+
+#history li {
+  padding: 8px;
+  margin: 5px 0;
+  background: #3a3a3a;
+  border-radius: 4px;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+/* Message display */
+#msg {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  color: #fff;
+}
+
+#msg:not(:empty) {
+  background: #2b2b2b;
+  border: 1px solid #444;
+}
+
+/* Home page sections */
+section {
+  background: #2b2b2b;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 15px 0;
+  border: 1px solid #444;
+}
+
+section p {
+  color: #fff;
+  font-size: 16px;
+}
+
+/* User display */
+#user {
+  background: #2b2b2b;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  color: #bbb;
+  font-weight: 500;
+  border: 1px solid #444;
+}
+
+/* Result screen */
+#result {
+  background: #2b2b2b;
+  padding: 20px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  color: #fff;
+}
+
+#result h2 {
+  color: #fff;
+}
+
+#result a {
+  color: #9ad0ff;
+  text-decoration: none;
+}
+
+#result a:hover {
+  text-decoration: underline;
+}
+
+#progress {
+  color: #bbb;
+  margin-top: 10px;
+}
+

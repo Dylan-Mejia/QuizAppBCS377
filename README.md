@@ -1,2 +1,1 @@
-# QuizAppBCS377
-This is a repository for my quiz app website
+This is a repository for my quiz app website. In this website users can sign up with an email, password and display name, this information is saved and stored in MongoDB with a password hash of course. The user can take the quiz and choose how many questions they want in their quiz. Questions come from the questions.json file. Users can also view their profile and their play history as well as view the leaderboards of the top 10 users with the most questions answered correctlly. 
